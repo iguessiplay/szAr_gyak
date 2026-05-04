@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Számítógép-architektúrák gyakorló</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Számítógép-architektúrák gyakorló</h1>
+      <p>Igaz/hamis, táblázatos, számolós és DRAM/TLB feladatok gyakorlásához.</p>
+    </div>
+    <button id="resetProgressBtn" class="ghost">Haladás törlése</button>
+  </header>
+
+  <main>
+    <section class="panel controls">
+      <label>
+        Témakör:
+        <select id="topicFilter">
+          <option value="all">Összes</option>
+        </select>
+      </label>
+
+      <label>
+        Mód:
+        <select id="mode">
+          <option value="practice">Gyakorlás: azonnali ellenőrzés</option>
+          <option value="exam">Vizsga: csak a végén</option>
+        </select>
+      </label>
+
+      <button id="newSetBtn">Új feladatsor</button>
+      <button id="checkAllBtn">Ellenőrzés</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><span id="score">0</span><small>pont</small></div>
+      <div class="stat"><span id="answered">0</span><small>megoldva</small></div>
+      <div class="stat"><span id="streak">0</span><small>sorozat</small></div>
+    </section>
+
+    <section id="quiz"></section>
+  </main>
+
+  <template id="questionTemplate">
+    <article class="card question-card">
+      <div class="q-head">
+        <div>
+          <span class="badge"></span>
+          <h2></h2>
+        </div>
+        <div class="result-pill hidden"></div>
+      </div>
+      <p class="prompt"></p>
+      <div class="body"></div>
+      <details class="explanation">
+        <summary>Magyarázat</summary>
+        <div class="explanation-text"></div>
+      </details>
+      <div class="actions">
+        <button class="checkBtn">Ellenőrzés</button>
+        <button class="showBtn ghost">Megoldás mutatása</button>
+      </div>
+    </article>
+  </template>
+
+  <footer>
+    <p>Offline működik. A kérdésbankot a <code>questions.js</code> fájlban tudod bővíteni.</p>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
