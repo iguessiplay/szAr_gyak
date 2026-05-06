@@ -538,9 +538,9 @@ const QUESTION_BANK = [
     fields: [
       { label: "Forgási sebesség", answer: 5000, suffix: "RPM" },
       { label: "5000 bájtos kérés átlagos kiszolgálási ideje", answer: 16, suffix: "ms" },
-      { label: "Diszk átviteli sebessége", answer: 312500, suffix: "bájt/s" }
+      { label: "Diszk átviteli sebessége", answer: 62500000, suffix: "bájt/s" }
     ],
-    explanation: "A forgási késleltetés átlaga fél fordulat. 5000 RPM esetén egy fordulat 12 ms, átlagosan 6 ms. 0,416+9,5+6+átviteli idő ≈ 16 ms. A diszk átviteli sebessége a megadott Moodle-megoldás szerint 312500 bájt/s."
+    explanation: "A forgási késleltetés átlaga fél fordulat. 5000 RPM esetén egy fordulat 12 ms, átlagosan 6 ms. 0,416+9,5+6+átviteli idő ≈ 16 ms. A diszk átviteli sebessége: 750000 × 83.333 = 62 500 000 byte/s."
   },
   {
     id: "virtual-memory-hierarchical-alt-3",
@@ -583,8 +583,8 @@ const QUESTION_BANK = [
     title: "PCI arbitrációs eljárások",
     prompt: "Milyen arbitrációt használ a PCI?",
     statements: [
-      { text: "Centralizált arbitrációt", answer: false },
-      { text: "Párhuzamos arbitrációt", answer: false },
+      { text: "Centralizált arbitrációt", answer: true },
+      { text: "Párhuzamos arbitrációt", answer: true },
       { text: "Önkiválasztó arbitrációt", answer: false },
       { text: "Ütközésdetektáláson alapuló arbitrációt", answer: false }
     ],
@@ -714,7 +714,7 @@ const QUESTION_BANK = [
         ["fr-fcfs", "read", "32"]
       ]
     },
-    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; READ 0; PRECHARGE; ACTIVATE 4; READ 32; PRECHARGE\nFR-FCFS: READ 32; PRECHARGE; ACTIVATE 2; READ 16; READ 0; PRECHARGE",
+    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; PRECHARGE; ACTIVATE 4; READ 32; PRECHARGE; ACTIVATE 2; READ 0; PRECHARGE",
     explanation: "FR-FCFS először a már nyitott 4-es sor találatát szolgálja ki (READ 32), majd zárja a sort és aktiválja a 2-es sort. FCFS a beérkezési sorrendet követi."
   },
   {
@@ -745,7 +745,7 @@ const QUESTION_BANK = [
       { label: "IO sebesség", answer: 40, suffix: "IOPS" },
       { label: "Diszk átviteli sebessége", answer: 20000000, suffix: "bájt/s" }
     ],
-    explanation: "A Moodle-megoldás szerint a fordulatszám 9600 RPM, az átlagos kiszolgálási idő 13 ms, az IO-sebesség 40 IOPS, az átviteli sebesség pedig 20 000 000 bájt/s."
+    explanation: "A Moodle-megoldás szerint a fordulatszám 9600 RPM, az átlagos kiszolgálási idő 13 ms, az IO-sebesség 40 IOPS, az átviteli sebesség pedig 750000 × 160 = 120000000 byte/s."
   },
   {
     id: "two-operand-instructions-alt-5",
@@ -999,7 +999,7 @@ const QUESTION_BANK = [
         ["fr-fcfs", "read", "32"]
       ]
     },
-    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; READ 0; PRECHARGE; ACTIVATE 3; READ 32; PRECHARGE\nFR-FCFS: READ 32; PRECHARGE; ACTIVATE 2; READ 16; READ 0; PRECHARGE",
+    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; PRECHARGE; ACTIVATE 3; READ 32; PRECHARGE; ACTIVATE 2; READ 0; PRECHARGE",
     explanation: "FR-FCFS először a nyitott sorban lévő találatot szolgálja ki, ezért READ 32 kerül előre. FCFS a kérések eredeti sorrendjét követi, ezért előbb át kell váltani a 2-es sorra."
   },
   {
@@ -1018,21 +1018,6 @@ const QUESTION_BANK = [
     ],
     explanation: "A Moodle-megoldás szerint a válaszok: DDR2-1000: 20 órajel és 40 ns; DDR3-1800: 27 órajel és 30 ns; DDR3-3200: 34 órajel és 21,25 ns."
   },
-  {
-    id: "disk-service-time-alt-6",
-    topic: "Háttértár",
-    type: "number",
-    title: "Merevlemez kiszolgálási idő számolás (4 lemez)",
-    prompt: "Egy merevlemez 4 db kétoldalas lemezt tartalmaz, mindegyiken 200000 sávval, minden sávban 1500 szektorral. A szektorok mérete 500 byte, ZBR nincs. Számold ki a megadott értékeket.",
-    fields: [
-      { label: "Forgási sebesség", answer: 9600, suffix: "RPM" },
-      { label: "50000 bájtos kérés átlagos kiszolgálási ideje", answer: 13, suffix: "ms" },
-      { label: "IO sebesség", answer: 40, suffix: "IOPS" },
-      { label: "Diszk átviteli sebessége", answer: 20000000, suffix: "bájt/s" }
-    ],
-    explanation: "A Moodle-megoldás szerint: 9600 RPM, 13 ms átlagos kiszolgálási idő, 40 IOPS és 20 000 000 bájt/s átviteli sebesség."
-  }
-  ,
   {
     id: "ssd-write-dedup-alt",
     topic: "SSD / NAND",
@@ -1085,9 +1070,9 @@ const QUESTION_BANK = [
     title: "RAID 1 kapacitás",
     prompt: "4 darab 1 TB-os lemez RAID1-ben mennyi használható kapacitást ad?",
     fields: [
-      { label: "Kapacitás", answer: 2, suffix: "TB" }
+      { label: "Kapacitás", answer: 1, suffix: "TB" }
     ],
-    explanation: "RAID1 tükröz, így a fele használható: 4 lemez → 2 lemeznyi kapacitás."
+    explanation: "RAID1-nél minden egyes lemez tartalma azonos a többivel, tehát csak 1 TB a felhasználható kapacitás."
   },
   {
     id: "tlb-basic-alt-extra",
