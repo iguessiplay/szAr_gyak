@@ -66,6 +66,7 @@ function renderBody(q) {
   if (q.type === "number") return renderNumber(q);
   if (q.type === "text") return renderText(q);
   if (q.type === "dramCommands") return renderDramCommands(q);
+  if (q.type === "tlbScenario") return renderTlbScenario(q);
 
   const div = document.createElement("div");
   div.textContent = "Ismeretlen feladattípus.";
@@ -202,6 +203,152 @@ function renderDramCommands(q) {
   return wrap;
 }
 
+function cloneInitialPt2Tables(initialPt2) {
+  return initialPt2.map(table => table.map(row => ({ ...row })));
+}
+
+function renderPt2Table(q, tableIdx, tableData, scenarioIdx) {
+  const table = document.createElement("table");
+  table.className = "mini-grid";
+
+  const head = document.createElement("tr");
+  head.innerHTML = "<th>Idx</th><th>V</th><th>Cim</th>";
+  table.appendChild(head);
+
+  tableData.forEach((row, rowIdx) => {
+    const tr = document.createElement("tr");
+    const idxBits = rowIdx.toString(2).padStart(2, "0");
+    tr.innerHTML = `<td>${idxBits}</td>`;
+
+    const vCell = document.createElement("td");
+    const vInput = document.createElement("input");
+    vInput.name = `tlbsc-pt2-v-${q.id}-${scenarioIdx}-${tableIdx}-${rowIdx}`;
+    vInput.type = "number";
+    vInput.min = "0";
+    vInput.max = "1";
+    vInput.step = "1";
+    vInput.className = "mini-input";
+    vInput.value = row.v;
+    vCell.appendChild(vInput);
+    tr.appendChild(vCell);
+
+    const fCell = document.createElement("td");
+    const fInput = document.createElement("input");
+    fInput.name = `tlbsc-pt2-f-${q.id}-${scenarioIdx}-${tableIdx}-${rowIdx}`;
+    fInput.type = "text";
+    fInput.className = "mini-input";
+    fInput.value = row.frame;
+    fCell.appendChild(fInput);
+    tr.appendChild(fCell);
+
+    table.appendChild(tr);
+  });
+
+  return table;
+}
+
+function renderTlbScenario(q) {
+  const wrap = document.createElement("div");
+  wrap.className = "tlb-scenario-wrap";
+
+  const info = document.createElement("pre");
+  info.className = "codebox";
+  info.textContent = q.context;
+  wrap.appendChild(info);
+
+  const initial = document.createElement("div");
+  initial.className = "tlb-initial";
+
+  const firstTitle = document.createElement("h3");
+  firstTitle.textContent = "Kezdeti elsőszintű laptábla";
+  initial.appendChild(firstTitle);
+
+  const firstTable = document.createElement("table");
+  firstTable.className = "mini-grid";
+  firstTable.innerHTML = "<tr><th>Idx</th><th>V</th><th>Cim</th></tr>";
+  q.initial.firstLevel.forEach((row, rowIdx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${rowIdx.toString(2).padStart(2, "0")}</td><td>${row.v}</td><td>${row.ptr}</td>`;
+    firstTable.appendChild(tr);
+  });
+  initial.appendChild(firstTable);
+
+  const tlbTitle = document.createElement("h3");
+  tlbTitle.textContent = "Kezdeti TLB";
+  initial.appendChild(tlbTitle);
+
+  const tlbTable = document.createElement("table");
+  tlbTable.className = "mini-grid";
+  tlbTable.innerHTML = "<tr><th>Valid</th><th>Lap</th><th>Keret</th><th>Kor</th></tr>";
+  q.initial.tlb.forEach(row => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${row.valid}</td><td>${row.page}</td><td>${row.frame}</td><td>${row.age}</td>`;
+    tlbTable.appendChild(tr);
+  });
+  initial.appendChild(tlbTable);
+  wrap.appendChild(initial);
+
+  q.scenarios.forEach((scenario, sIdx) => {
+    const section = document.createElement("section");
+    section.className = "tlb-scenario-section";
+
+    const title = document.createElement("h3");
+    title.textContent = `${sIdx + 1}. feladat: ${scenario.title}`;
+    section.appendChild(title);
+
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.textContent = "A képen látható feladathoz hasonlóan a teljes új állapotot add meg.";
+    section.appendChild(note);
+
+    const tlbNewTitle = document.createElement("h4");
+    tlbNewTitle.textContent = "TLB új állapota";
+    section.appendChild(tlbNewTitle);
+
+    const newTlb = document.createElement("table");
+    newTlb.className = "mini-grid";
+    newTlb.innerHTML = "<tr><th>Valid</th><th>Lap</th><th>Keret</th><th>Kor</th></tr>";
+    scenario.expected.tlb.forEach((_, rowIdx) => {
+      const tr = document.createElement("tr");
+
+      ["v", "p", "f", "a"].forEach(kind => {
+        const td = document.createElement("td");
+        const inp = document.createElement("input");
+        inp.type = "text";
+        inp.className = "mini-input";
+        inp.name = `tlbsc-tlb-${kind}-${q.id}-${sIdx}-${rowIdx}`;
+        td.appendChild(inp);
+        tr.appendChild(td);
+      });
+
+      newTlb.appendChild(tr);
+    });
+    section.appendChild(newTlb);
+
+    const pt2Title = document.createElement("h4");
+    pt2Title.textContent = "Másodszintű laptáblák új állapota";
+    section.appendChild(pt2Title);
+
+    const pt2Wrap = document.createElement("div");
+    pt2Wrap.className = "pt2-wrap";
+    const initialPt2 = cloneInitialPt2Tables(q.initial.secondLevel);
+    initialPt2.forEach((tableData, tableIdx) => {
+      const block = document.createElement("div");
+      const label = document.createElement("div");
+      label.className = "muted";
+      label.textContent = `2. szint, ${tableIdx}. tábla`;
+      block.appendChild(label);
+      block.appendChild(renderPt2Table(q, tableIdx, tableData, sIdx));
+      pt2Wrap.appendChild(block);
+    });
+    section.appendChild(pt2Wrap);
+
+    wrap.appendChild(section);
+  });
+
+  return wrap;
+}
+
 function getQuestionCard(id) {
   return document.querySelector(`.question-card[data-id="${CSS.escape(id)}"]`);
 }
@@ -284,6 +431,46 @@ function checkQuestion(id, silent) {
     ok = points === max;
   }
 
+  if (q.type === "tlbScenario") {
+    points = 0;
+    max = 0;
+
+    q.scenarios.forEach((scenario, sIdx) => {
+      scenario.expected.tlb.forEach((row, rIdx) => {
+        const expected = [String(row.valid), String(row.page), String(row.frame), String(row.age)];
+        ["v", "p", "f", "a"].forEach((kind, cIdx) => {
+          const el = card.querySelector(`[name="tlbsc-tlb-${kind}-${q.id}-${sIdx}-${rIdx}"]`);
+          const correct = el.value.trim() === expected[cIdx];
+          el.classList.toggle("cell-ok", correct);
+          el.classList.toggle("cell-bad", !correct);
+          points += correct ? 1 : 0;
+          max++;
+        });
+      });
+
+      scenario.expected.secondLevel.forEach((tableData, tIdx) => {
+        tableData.forEach((row, rIdx) => {
+          const vEl = card.querySelector(`[name="tlbsc-pt2-v-${q.id}-${sIdx}-${tIdx}-${rIdx}"]`);
+          const fEl = card.querySelector(`[name="tlbsc-pt2-f-${q.id}-${sIdx}-${tIdx}-${rIdx}"]`);
+
+          const vOk = vEl.value.trim() === String(row.v);
+          const fOk = fEl.value.trim() === String(row.frame);
+
+          vEl.classList.toggle("cell-ok", vOk);
+          vEl.classList.toggle("cell-bad", !vOk);
+          fEl.classList.toggle("cell-ok", fOk);
+          fEl.classList.toggle("cell-bad", !fOk);
+
+          points += vOk ? 1 : 0;
+          points += fOk ? 1 : 0;
+          max += 2;
+        });
+      });
+    });
+
+    ok = points === max;
+  }
+
   setResult(card, ok, `${points}/${max} pont`);
 
   if (!silent && modeEl.value === "practice" && !scoredQuestionIds.has(id)) {
@@ -330,6 +517,24 @@ function showSolution(id) {
     q.expected.forEach((exp, i) => {
       card.querySelector(`[name="cmd-${q.id}-${i}"]`).value = exp[0];
       card.querySelector(`[name="param-${q.id}-${i}"]`).value = exp[1];
+    });
+  }
+
+  if (q.type === "tlbScenario") {
+    q.scenarios.forEach((scenario, sIdx) => {
+      scenario.expected.tlb.forEach((row, rIdx) => {
+        card.querySelector(`[name="tlbsc-tlb-v-${q.id}-${sIdx}-${rIdx}"]`).value = row.valid;
+        card.querySelector(`[name="tlbsc-tlb-p-${q.id}-${sIdx}-${rIdx}"]`).value = row.page;
+        card.querySelector(`[name="tlbsc-tlb-f-${q.id}-${sIdx}-${rIdx}"]`).value = row.frame;
+        card.querySelector(`[name="tlbsc-tlb-a-${q.id}-${sIdx}-${rIdx}"]`).value = row.age;
+      });
+
+      scenario.expected.secondLevel.forEach((tableData, tIdx) => {
+        tableData.forEach((row, rIdx) => {
+          card.querySelector(`[name="tlbsc-pt2-v-${q.id}-${sIdx}-${tIdx}-${rIdx}"]`).value = row.v;
+          card.querySelector(`[name="tlbsc-pt2-f-${q.id}-${sIdx}-${tIdx}-${rIdx}"]`).value = row.frame;
+        });
+      });
     });
   }
 

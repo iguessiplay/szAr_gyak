@@ -588,7 +588,7 @@ const QUESTION_BANK = [
       { text: "Önkiválasztó arbitrációt", answer: false },
       { text: "Ütközésdetektáláson alapuló arbitrációt", answer: false }
     ],
-    explanation: "A PCI buszhoz központi buszarbiter tartozik, a felsorolt megfogalmazások közül a Moodle-válasz szerint egyik sem igaz ebben a formában."
+    explanation: "A PCI buszhoz központi buszarbiter tartozik, a felsorolt megfogalmazások közül a Moodle-válasz szerint csak 2 igaz ebben a formában."
   },
   {
     id: "cache-prefetch-goal-alt-5",
@@ -743,7 +743,7 @@ const QUESTION_BANK = [
       { label: "Forgási sebesség", answer: 9600, suffix: "RPM" },
       { label: "50000 bájtos kérés átlagos kiszolgálási ideje", answer: 13, suffix: "ms" },
       { label: "IO sebesség", answer: 40, suffix: "IOPS" },
-      { label: "Diszk átviteli sebessége", answer: 20000000, suffix: "bájt/s" }
+      { label: "Diszk átviteli sebessége", answer: 120000000, suffix: "bájt/s" }
     ],
     explanation: "A Moodle-megoldás szerint a fordulatszám 9600 RPM, az átlagos kiszolgálási idő 13 ms, az IO-sebesség 40 IOPS, az átviteli sebesség pedig 750000 × 160 = 120000000 byte/s."
   },
@@ -1087,5 +1087,130 @@ const QUESTION_BANK = [
       { text: "TLB csak szoftveresen valósítható meg", answer: false }
     ],
     explanation: "TLB egy gyorsítótár a lapcímfordításhoz, tipikusan hardverben implementálva."
+  },
+  {
+    id: "tlb-page-table-state-image-style",
+    topic: "Virtuális memória / TLB",
+    type: "tlbScenario",
+    title: "TLB és laptábla állapotváltozás (képes feladat stílus)",
+    prompt: "Töltsd ki a TLB és a másodszintű laptáblák új állapotát a két külön hivatkozásra.",
+    context: "16 bites virtuális és 15 bites fizikai cím, lapméret 4096 byte, 4 bejegyzéses teljesen asszociatív TLB (LRU).\nHa az OS új lapot helyez be és lapot kell kilökni, a következő áldozat a 3-as lap.\nHa egy kilökött laphoz TLB bejegyzés tartozik, azt invalidálni kell.",
+    initial: {
+      firstLevel: [
+        { v: 1, ptr: 0 },
+        { v: 1, ptr: 1 },
+        { v: 1, ptr: 2 },
+        { v: 1, ptr: 3 }
+      ],
+      secondLevel: [
+        [
+          { v: 1, frame: 5 },
+          { v: 0, frame: "?" },
+          { v: 0, frame: "?" },
+          { v: 1, frame: 0 }
+        ],
+        [
+          { v: 1, frame: 7 },
+          { v: 0, frame: "?" },
+          { v: 1, frame: 6 },
+          { v: 0, frame: "?" }
+        ],
+        [
+          { v: 1, frame: 1 },
+          { v: 1, frame: 3 },
+          { v: 0, frame: "?" },
+          { v: 0, frame: "?" }
+        ],
+        [
+          { v: 1, frame: 4 },
+          { v: 0, frame: "?" },
+          { v: 0, frame: "?" },
+          { v: 0, frame: "?" }
+        ]
+      ],
+      tlb: [
+        { valid: 1, page: 8, frame: 1, age: 1 },
+        { valid: 1, page: 9, frame: 3, age: 3 },
+        { valid: 1, page: 0, frame: 5, age: 4 },
+        { valid: 1, page: 3, frame: 0, age: 2 }
+      ]
+    },
+    scenarios: [
+      {
+        title: "A 4-es lap meghivatkozása (kiindulás: kezdeti állapot)",
+        expected: {
+          tlb: [
+            { valid: 1, page: 8, frame: 1, age: 2 },
+            { valid: 1, page: 9, frame: 3, age: 4 },
+            { valid: 1, page: 4, frame: 7, age: 1 },
+            { valid: 1, page: 3, frame: 0, age: 3 }
+          ],
+          secondLevel: [
+            [
+              { v: 1, frame: 5 },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" },
+              { v: 1, frame: 0 }
+            ],
+            [
+              { v: 1, frame: 7 },
+              { v: 0, frame: "?" },
+              { v: 1, frame: 6 },
+              { v: 0, frame: "?" }
+            ],
+            [
+              { v: 1, frame: 1 },
+              { v: 1, frame: 3 },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" }
+            ],
+            [
+              { v: 1, frame: 4 },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" }
+            ]
+          ]
+        }
+      },
+      {
+        title: "A 11-es lap meghivatkozása (kiindulás: kezdeti állapot)",
+        expected: {
+          tlb: [
+            { valid: 1, page: 8, frame: 1, age: 2 },
+            { valid: 1, page: 9, frame: 3, age: 4 },
+            { valid: 1, page: 0, frame: 5, age: 3 },
+            { valid: 1, page: 11, frame: 0, age: 1 }
+          ],
+          secondLevel: [
+            [
+              { v: 1, frame: 5 },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" },
+              { v: 0, frame: 0 }
+            ],
+            [
+              { v: 1, frame: 7 },
+              { v: 0, frame: "?" },
+              { v: 1, frame: 6 },
+              { v: 0, frame: "?" }
+            ],
+            [
+              { v: 1, frame: 1 },
+              { v: 1, frame: 3 },
+              { v: 0, frame: "?" },
+              { v: 1, frame: 0 }
+            ],
+            [
+              { v: 1, frame: 4 },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" },
+              { v: 0, frame: "?" }
+            ]
+          ]
+        }
+      }
+    ],
+    explanation: "A két részfeladat egymástól független: mindkettő a kezdeti állapotból indul. 4-es lapnál laptábla-találat van, 11-es lapnál laphiba és 3-as lap kilökése történik, TLB-invalidálással."
   }
 ];

@@ -236,6 +236,62 @@ button.ghost {
 
 .command-row input, .command-row select { width: 100%; }
 
+.tlb-scenario-wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.tlb-initial h3,
+.tlb-scenario-section h3,
+.tlb-scenario-section h4 {
+  margin: .3rem 0;
+}
+
+.mini-grid {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 520px;
+  margin: .35rem 0 .75rem;
+}
+
+.mini-grid th,
+.mini-grid td {
+  border: 1px solid var(--line);
+  padding: .4rem;
+  text-align: center;
+}
+
+.mini-grid th {
+  background: #eef2f7;
+}
+
+.mini-input {
+  width: 100%;
+  min-width: 3rem;
+  padding: .35rem .4rem;
+  text-align: center;
+}
+
+.pt2-wrap {
+  display: grid;
+  gap: .8rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.cell-ok {
+  border-color: var(--ok) !important;
+  background: var(--soft-ok);
+}
+
+.cell-bad {
+  border-color: var(--bad) !important;
+  background: var(--soft-bad);
+}
+
+.muted {
+  color: var(--muted);
+}
+
 .codebox {
   background: #0f172a;
   color: #e2e8f0;
