@@ -4,6 +4,8 @@ const topicFilter = document.querySelector("#topicFilter");
 const modeEl = document.querySelector("#mode");
 
 let currentQuestions = [];
+let scoredQuestionIds = new Set();
+let examSetScored = false;
 let state = JSON.parse(localStorage.getItem("archPracticeState") || '{"score":0,"answered":0,"streak":0}');
 
 function saveState() {
@@ -34,6 +36,8 @@ function makeSet() {
   const topic = topicFilter.value;
   const pool = topic === "all" ? QUESTION_BANK : QUESTION_BANK.filter(q => q.topic === topic);
   currentQuestions = shuffle(pool).slice(0, Math.min(8, pool.length));
+  scoredQuestionIds = new Set();
+  examSetScored = false;
   render();
 }
 
@@ -282,7 +286,8 @@ function checkQuestion(id, silent) {
 
   setResult(card, ok, `${points}/${max} pont`);
 
-  if (!silent && modeEl.value === "practice") {
+  if (!silent && modeEl.value === "practice" && !scoredQuestionIds.has(id)) {
+    scoredQuestionIds.add(id);
     state.answered++;
     state.score += points;
     state.streak = ok ? state.streak + 1 : 0;
@@ -336,6 +341,21 @@ document.querySelector("#newSetBtn").addEventListener("click", makeSet);
 
 document.querySelector("#checkAllBtn").addEventListener("click", () => {
   let total = 0, maxTotal = 0, allOk = true;
+
+  if (modeEl.value === "practice") {
+    currentQuestions.forEach(q => {
+      const r = checkQuestion(q.id, false);
+      total += r.points;
+      maxTotal += r.max;
+      allOk &&= r.ok;
+    });
+    alert(`Eredmény: ${total}/${maxTotal} pont`);
+    return;
+  }
+
+  if (examSetScored) return;
+  examSetScored = true;
+
   currentQuestions.forEach(q => {
     const r = checkQuestion(q.id, true);
     total += r.points;
