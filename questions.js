@@ -992,7 +992,7 @@ const QUESTION_BANK = [
     topic: "DRAM",
     type: "text",
     title: "DRAM FCFS és FR-FCFS parancssor (3-as sor nyitva)",
-    prompt: "Add meg a memória vezérlő által kiadott DRAM parancsokat FCFS és FR-FCFS ütemezés szerint. Kezdetben a 3-as sor van nyitva. Az utolsó parancs után a memóriavezérlő zárja le a nyitott sort.",
+    prompt: "Add meg a memória vezérlő által kiadott DRAM parancsokat FCFS és FR-FCFS ütemezés szerint. Kezdetben a 3-as sor van nyitva. Az utolsó parancs után a memóriavezérlő zárja le a nyitott sort.\n(2, 16), (3, 32), (2, 0)",
     keywords: {
       requiredGroups: [
         ["fcfs", "precharge", "activate", "read"],
