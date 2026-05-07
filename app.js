@@ -2,11 +2,38 @@ const quizEl = document.querySelector("#quiz");
 const template = document.querySelector("#questionTemplate");
 const topicFilter = document.querySelector("#topicFilter");
 const modeEl = document.querySelector("#mode");
+const themeToggleBtn = document.querySelector("#themeToggleBtn");
+
+const THEME_STORAGE_KEY = "archPracticeTheme";
 
 let currentQuestions = [];
 let scoredQuestionIds = new Set();
 let examSetScored = false;
 let state = JSON.parse(localStorage.getItem("archPracticeState") || '{"score":0,"answered":0,"streak":0}');
+
+function getPreferredTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function getTheme() {
+  return document.documentElement.dataset.theme || getPreferredTheme();
+}
+
+function setTheme(theme) {
+  const nextTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = nextTheme;
+  document.documentElement.style.colorScheme = nextTheme;
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  if (themeToggleBtn) {
+    const isDark = nextTheme === "dark";
+    themeToggleBtn.textContent = isDark ? "Világos téma" : "Sötét téma";
+    themeToggleBtn.setAttribute("aria-pressed", String(isDark));
+  }
+}
+
+function toggleTheme() {
+  setTheme(getTheme() === "dark" ? "light" : "dark");
+}
 
 function saveState() {
   localStorage.setItem("archPracticeState", JSON.stringify(state));
@@ -581,8 +608,11 @@ document.querySelector("#resetProgressBtn").addEventListener("click", () => {
   updateStats();
 });
 
+themeToggleBtn.addEventListener("click", toggleTheme);
+
 topicFilter.addEventListener("change", makeSet);
 
+setTheme(document.documentElement.dataset.theme || getPreferredTheme());
 initTopics();
 updateStats();
 makeSet();

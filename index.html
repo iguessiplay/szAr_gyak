@@ -4,6 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Számítógép-architektúrák gyakorló</title>
+  <script>
+    (() => {
+      const storedTheme = localStorage.getItem('archPracticeTheme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +21,10 @@
       <h1>Számítógép-architektúrák gyakorló</h1>
       <p>Igaz/hamis, táblázatos, számolós és DRAM/TLB feladatok gyakorlásához.</p>
     </div>
-    <button id="resetProgressBtn" class="ghost">Haladás törlése</button>
+    <div class="topbar-actions">
+      <button id="themeToggleBtn" class="ghost" type="button" aria-pressed="false"></button>
+      <button id="resetProgressBtn" class="ghost" type="button">Haladás törlése</button>
+    </div>
   </header>
 
   <main>

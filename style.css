@@ -1,22 +1,54 @@
 * { box-sizing: border-box; }
 
 :root {
-  --bg: #f6f8fb;
-  --card: #ffffff;
-  --text: #17202a;
-  --muted: #5f6c7b;
-  --line: #d9e2ec;
-  --accent: #2563eb;
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --bg-accent: #dce9ff;
+  --card: rgba(255, 255, 255, 0.88);
+  --card-solid: #ffffff;
+  --text: #15202d;
+  --muted: #5c6978;
+  --line: #d8e1ec;
+  --accent: #2457d6;
+  --accent-strong: #1d4ed8;
   --ok: #188038;
-  --bad: #d93025;
-  --soft-ok: #e6f4ea;
-  --soft-bad: #fce8e6;
+  --bad: #c5221f;
+  --soft-ok: #e7f5ec;
+  --soft-bad: #fdecea;
   --soft-blue: #e8f0fe;
+  --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --field-bg: #ffffff;
+  --code-bg: #0f172a;
+  --code-text: #e2e8f0;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1120;
+  --bg-accent: #111a33;
+  --card: rgba(15, 23, 42, 0.82);
+  --card-solid: #111827;
+  --text: #e5ecf8;
+  --muted: #9cabbd;
+  --line: #24324a;
+  --accent: #7aa2ff;
+  --accent-strong: #9ab6ff;
+  --ok: #5ad69c;
+  --bad: #ff7a7a;
+  --soft-ok: rgba(90, 214, 156, 0.16);
+  --soft-bad: rgba(255, 122, 122, 0.16);
+  --soft-blue: rgba(122, 162, 255, 0.16);
+  --shadow: 0 22px 50px rgba(0, 0, 0, 0.35);
+  --field-bg: #0f172a;
+  --code-bg: #020617;
+  --code-text: #dbeafe;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top, var(--bg-accent), transparent 36%),
+    var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
@@ -28,8 +60,14 @@ body {
   gap: 1rem;
   align-items: center;
   padding: 1.5rem clamp(1rem, 4vw, 3rem);
-  background: linear-gradient(135deg, #dbeafe, #eef2ff);
+  background: linear-gradient(135deg, var(--bg-accent), color-mix(in srgb, var(--bg) 50%, var(--bg-accent)));
   border-bottom: 1px solid var(--line);
+}
+
+.topbar-actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
 }
 
 h1, h2, p { margin-top: 0; }
@@ -45,7 +83,8 @@ main {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, .05);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
 }
 
 .controls {
@@ -72,7 +111,8 @@ select, input[type="number"], input[type="text"], textarea {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: .6rem .7rem;
-  background: white;
+  background: var(--field-bg);
+  color: var(--text);
 }
 
 button {
@@ -86,10 +126,22 @@ button {
 }
 
 button:hover { filter: brightness(.96); }
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
 button.ghost {
   color: var(--accent);
-  border: 1px solid #bfdbfe;
-  background: white;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  background: color-mix(in srgb, var(--card-solid) 92%, transparent);
+}
+
+button.ghost:hover {
+  background: color-mix(in srgb, var(--accent) 8%, var(--card-solid));
 }
 
 .stats {
@@ -140,7 +192,7 @@ button.ghost {
 
 .prompt {
   margin: .8rem 0 1rem;
-  color: #263445;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
   font-size: 1.02rem;
 }
 
@@ -208,7 +260,7 @@ button.ghost {
 }
 
 .matrix th {
-  background: #eef2f7;
+  background: color-mix(in srgb, var(--card-solid) 88%, var(--line));
 }
 
 .matrix td select {
@@ -262,7 +314,7 @@ button.ghost {
 }
 
 .mini-grid th {
-  background: #eef2f7;
+  background: color-mix(in srgb, var(--card-solid) 88%, var(--line));
 }
 
 .mini-input {
@@ -293,8 +345,8 @@ button.ghost {
 }
 
 .codebox {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--code-bg);
+  color: var(--code-text);
   padding: .9rem;
   border-radius: 12px;
   overflow: auto;
@@ -318,6 +370,31 @@ button.ghost {
   gap: .6rem;
   margin-top: 1rem;
   flex-wrap: wrap;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .topbar-actions {
+    justify-content: stretch;
+  }
+
+  .topbar-actions button {
+    flex: 1 1 0;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-row,
+  .number-row,
+  .command-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 footer {
