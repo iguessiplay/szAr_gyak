@@ -92,6 +92,7 @@ function renderBody(q) {
   if (q.type === "matrix") return renderMatrix(q);
   if (q.type === "number") return renderNumber(q);
   if (q.type === "text") return renderText(q);
+  if (q.type === "shortanswer") return renderShortAnswer(q);
   if (q.type === "dramCommands") return renderDramCommands(q);
   if (q.type === "tlbScenario") return renderTlbScenario(q);
 
@@ -191,6 +192,23 @@ function renderText(q) {
   const hint = document.createElement("p");
   hint.className = "muted";
   hint.textContent = "A program kulcsszavak alapján ad részpontot, utána nézd meg a mintamegoldást is.";
+  wrap.appendChild(hint);
+
+  return wrap;
+}
+
+function renderShortAnswer(q) {
+  const wrap = document.createElement("div");
+  const inp = document.createElement("input");
+  inp.type = "text";
+  inp.name = `short-${q.id}`;
+  inp.placeholder = "Rövid válasz...";
+  inp.style.width = "100%";
+  wrap.appendChild(inp);
+
+  const hint = document.createElement("p");
+  hint.className = "muted";
+  hint.textContent = "Adj meg egy rövid, tömör választ.";
   wrap.appendChild(hint);
 
   return wrap;
@@ -446,6 +464,16 @@ function checkQuestion(id, silent) {
     ok = points === max;
   }
 
+  if (q.type === "shortanswer") {
+    const got = card.querySelector(`[name="short-${q.id}"]`).value;
+    const normalize = value => String(value).trim().toLowerCase().replace(/\s+/g, " ");
+    max = 1;
+    points = got !== "" && normalize(got) === normalize(q.answer) ? 1 : 0;
+    const input = card.querySelector(`[name="short-${q.id}"]`);
+    mark(input.parentElement.querySelector(".checkmark"), points === 1);
+    ok = points === 1;
+  }
+
   if (q.type === "dramCommands") {
     max = q.expected.length * 2;
     points = 0;
@@ -538,6 +566,10 @@ function showSolution(id) {
 
   if (q.type === "text") {
     card.querySelector(`[name="text-${q.id}"]`).value = q.sample;
+  }
+
+  if (q.type === "shortanswer") {
+    card.querySelector(`[name="short-${q.id}"]`).value = q.answer;
   }
 
   if (q.type === "dramCommands") {
