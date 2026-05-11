@@ -1218,7 +1218,7 @@ const QUESTION_BANK = [
   {
     id: "asd-1",
     topic: "Háttértárak (RAID)",
-    type: "booleanAnswer",
+    type: "shortanswer",
     title: "5 db 1 TB-os diszk hasznos kapacitása RAID 0 esetén",
     prompt: "5 db 1 TB-os diszk hasznos kapacitása RAID 0 esetén",
     answer: "5 TB",
@@ -1227,7 +1227,7 @@ const QUESTION_BANK = [
   {
     id: "asd-2",
     topic: "Háttértárak (RAID)",
-    type: "booleanAnswer",
+    type: "shortanswer",
     title: "5 db 1 TB-os diszk hasznos kapacitása RAID 6 esetén",
     prompt: "5 db 1 TB-os diszk hasznos kapacitása RAID 6 esetén",
     answer: "3 TB",
@@ -1236,7 +1236,7 @@ const QUESTION_BANK = [
   {
     id: "asd-3",
     topic: "Virtuális Memória",
-    type: "booleanAnswer",
+    type: "shortanswer",
     title: "5-ös lap hivatkozása utáni TLB állapot (LRU esetén)",
     prompt: "5-ös lap hivatkozása utáni TLB állapot (LRU esetén)",
     answer: "A legidősebb (4-es korú) bejegyzés helyére kerül, kora 1 lesz",
@@ -1245,7 +1245,7 @@ const QUESTION_BANK = [
   {
     id: "asd-6",
     topic: "Virtuális Memória",
-    type: "booleanAnswer",
+    type: "shortanswer",
     title: "8-as lap hivatkozása utáni TLB bejegyzés (Lap: 8)",
     prompt: "8-as lap hivatkozása utáni TLB bejegyzés (Lap: 8)",
     answer: "Keret: 1, Kor: 1",
