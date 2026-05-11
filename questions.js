@@ -705,17 +705,18 @@ const QUESTION_BANK = [
   {
     id: "dram-commands-fcfs-frfcfs-alt-5",
     topic: "DRAM",
-    type: "text",
-    title: "DRAM FCFS és FR-FCFS parancssor",
-    prompt: "Kezdetben a 4-es sor van nyitva. Kérések: (2,16), (4,32), (2,0). Add meg az FCFS és FR-FCFS DRAM parancssorokat, az utolsó parancs után zárd a nyitott sort.",
-    keywords: {
-      requiredGroups: [
-        ["fcfs", "precharge", "activate", "read"],
-        ["fr-fcfs", "read", "32"]
-      ]
-    },
-    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; PRECHARGE; ACTIVATE 4; READ 32; PRECHARGE; ACTIVATE 2; READ 0; PRECHARGE",
-    explanation: "FR-FCFS először a már nyitott 4-es sor találatát szolgálja ki (READ 32), majd zárja a sort és aktiválja a 2-es sort. FCFS a beérkezési sorrendet követi."
+    type: "dramCommands",
+    title: "DRAM FR-FCFS parancssor (4-es sor nyitva)",
+    prompt: "Kezdetben a 4-es sor van nyitva. Kérések: (2,16), (4,32), (2,0). Add meg a parancsokat FR-FCFS szerint, az utolsó után zárd a sort.",
+    expected: [
+      ["READ", "32"],
+      ["PRECHARGE", ""],
+      ["ACTIVATE", "2"],
+      ["READ", "16"],
+      ["READ", "0"],
+      ["PRECHARGE", ""]
+    ],
+    explanation: "FR-FCFS először a már nyitott 4-es sor találatát szolgálja ki (READ 32), majd zárja a sort, aktiválja a 2-es sort, és az onnan érkező READ parancsokat hajtja végre. Az utolsó után PRECHARGE a sort."
   },
   {
     id: "dram-timing-table-alt-5",
@@ -990,17 +991,18 @@ const QUESTION_BANK = [
   {
     id: "dram-commands-fcfs-frfcfs-alt-6",
     topic: "DRAM",
-    type: "text",
-    title: "DRAM FCFS és FR-FCFS parancssor (3-as sor nyitva)",
-    prompt: "Add meg a memória vezérlő által kiadott DRAM parancsokat FCFS és FR-FCFS ütemezés szerint. Kezdetben a 3-as sor van nyitva. Az utolsó parancs után a memóriavezérlő zárja le a nyitott sort.\n(2, 16), (3, 32), (2, 0)",
-    keywords: {
-      requiredGroups: [
-        ["fcfs", "precharge", "activate", "read"],
-        ["fr-fcfs", "read", "32"]
-      ]
-    },
-    sample: "FCFS: PRECHARGE; ACTIVATE 2; READ 16; PRECHARGE; ACTIVATE 3; READ 32; PRECHARGE; ACTIVATE 2; READ 0; PRECHARGE",
-    explanation: "FR-FCFS először a nyitott sorban lévő találatot szolgálja ki, ezért READ 32 kerül előre. FCFS a kérések eredeti sorrendjét követi, ezért előbb át kell váltani a 2-es sorra."
+    type: "dramCommands",
+    title: "DRAM FR-FCFS parancssor (3-as sor nyitva)",
+    prompt: "Kezdetben a 3-as sor van nyitva. Kérések: (2, 16), (3, 32), (2, 0). Add meg a parancsokat FR-FCFS szerint, az utolsó után zárd le a sort.",
+    expected: [
+      ["READ", "32"],
+      ["PRECHARGE", ""],
+      ["ACTIVATE", "2"],
+      ["READ", "16"],
+      ["READ", "0"],
+      ["PRECHARGE", ""]
+    ],
+    explanation: "FR-FCFS először a nyitott sorban lévő találatot szolgálja ki: READ 32 (row 3 nyitott). Majd sorzárás, 2-es sor aktiválása, és az onnan érkező READ parancsok. Az utolsó után PRECHARGE a sort."
   },
   {
     id: "dram-timing-table-alt-6",
