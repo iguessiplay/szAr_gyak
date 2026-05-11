@@ -215,8 +215,50 @@ button.ghost:hover {
 
 .tf-row {
   display: grid;
-  grid-template-columns: 135px 1fr auto;
+  grid-template-columns: 200px 1fr auto;
   gap: .7rem;
+  align-items: center;
+  padding: .65rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.tf-buttons {
+  display: flex;
+  gap: .4rem;
+}
+
+.tf-btn {
+  padding: .5rem .75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: 2px solid var(--line);
+  background: var(--card-solid);
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+}
+
+.tf-btn:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--card-solid));
+}
+
+.tf-btn.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.tf-statement {
+  font-size: 0.95rem;
+}
+
+.boolean-answer-wrap {
+  display: flex;
+  gap: 1rem;
   align-items: center;
   padding: .65rem;
   border: 1px solid var(--line);

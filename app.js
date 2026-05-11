@@ -89,6 +89,7 @@ function render() {
 
 function renderBody(q) {
   if (q.type === "truefalse") return renderTrueFalse(q);
+  if (q.type === "booleanAnswer") return renderBooleanAnswer(q);
   if (q.type === "matrix") return renderMatrix(q);
   if (q.type === "number") return renderNumber(q);
   if (q.type === "text") return renderText(q);
@@ -118,9 +119,32 @@ function renderTrueFalse(q) {
   q.statements.forEach((s, i) => {
     const row = document.createElement("div");
     row.className = "tf-row";
-    row.appendChild(trueFalseSelect(`tf-${q.id}-${i}`));
+
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "tf-buttons";
+    btnGroup.dataset.questionId = q.id;
+    btnGroup.dataset.statementIndex = i;
+
+    const trueBtn = document.createElement("button");
+    trueBtn.type = "button";
+    trueBtn.className = "tf-btn tf-true";
+    trueBtn.textContent = "IGAZ";
+    trueBtn.dataset.value = "true";
+    trueBtn.addEventListener("click", () => selectTrueFalse(btnGroup, "true"));
+    btnGroup.appendChild(trueBtn);
+
+    const falseBtn = document.createElement("button");
+    falseBtn.type = "button";
+    falseBtn.className = "tf-btn tf-false";
+    falseBtn.textContent = "HAMIS";
+    falseBtn.dataset.value = "false";
+    falseBtn.addEventListener("click", () => selectTrueFalse(btnGroup, "false"));
+    btnGroup.appendChild(falseBtn);
+
+    row.appendChild(btnGroup);
 
     const text = document.createElement("div");
+    text.className = "tf-statement";
     text.textContent = s.text;
     row.appendChild(text);
 
@@ -130,6 +154,47 @@ function renderTrueFalse(q) {
 
     wrap.appendChild(row);
   });
+  return wrap;
+}
+
+function selectTrueFalse(btnGroup, value) {
+  const buttons = btnGroup.querySelectorAll(".tf-btn");
+  buttons.forEach(btn => {
+    btn.classList.toggle("selected", btn.dataset.value === value);
+  });
+  btnGroup.dataset.selected = value;
+}
+
+function renderBooleanAnswer(q) {
+  const wrap = document.createElement("div");
+  wrap.className = "boolean-answer-wrap";
+  
+  const btnGroup = document.createElement("div");
+  btnGroup.className = "tf-buttons";
+  btnGroup.dataset.questionId = q.id;
+
+  const trueBtn = document.createElement("button");
+  trueBtn.type = "button";
+  trueBtn.className = "tf-btn tf-true";
+  trueBtn.textContent = "IGAZ";
+  trueBtn.dataset.value = "true";
+  trueBtn.addEventListener("click", () => selectTrueFalse(btnGroup, "true"));
+  btnGroup.appendChild(trueBtn);
+
+  const falseBtn = document.createElement("button");
+  falseBtn.type = "button";
+  falseBtn.className = "tf-btn tf-false";
+  falseBtn.textContent = "HAMIS";
+  falseBtn.dataset.value = "false";
+  falseBtn.addEventListener("click", () => selectTrueFalse(btnGroup, "false"));
+  btnGroup.appendChild(falseBtn);
+
+  wrap.appendChild(btnGroup);
+
+  const mark = document.createElement("span");
+  mark.className = "checkmark";
+  wrap.appendChild(mark);
+
   return wrap;
 }
 
@@ -421,12 +486,23 @@ function checkQuestion(id, silent) {
     max = q.statements.length;
     points = q.statements.reduce((acc, s, i) => {
       const row = card.querySelectorAll(".tf-row")[i];
-      const val = row.querySelector("select").value;
-      const correct = val !== "" && (val === "true") === s.answer;
+      const btnGroup = row.querySelector(".tf-buttons");
+      const val = btnGroup.dataset.selected;
+      const correct = val !== "" && val !== undefined && (val === "true") === s.answer;
       mark(row.querySelector(".checkmark"), correct);
       return acc + (correct ? 1 : 0);
     }, 0);
     ok = points === max;
+  }
+
+  if (q.type === "booleanAnswer") {
+    max = 1;
+    const btnGroup = card.querySelector(".tf-buttons");
+    const val = btnGroup.dataset.selected;
+    const correct = val !== "" && val !== undefined && (val === "true") === q.answer;
+    mark(card.querySelector(".checkmark"), correct);
+    points = correct ? 1 : 0;
+    ok = correct;
   }
 
   if (q.type === "matrix") {
@@ -546,8 +622,14 @@ function showSolution(id) {
 
   if (q.type === "truefalse") {
     q.statements.forEach((s, i) => {
-      card.querySelector(`[name="tf-${q.id}-${i}"]`).value = String(s.answer);
+      const btnGroup = card.querySelectorAll(".tf-buttons")[i];
+      selectTrueFalse(btnGroup, String(s.answer));
     });
+  }
+
+  if (q.type === "booleanAnswer") {
+    const btnGroup = card.querySelector(".tf-buttons");
+    selectTrueFalse(btnGroup, String(q.answer));
   }
 
   if (q.type === "matrix") {
