@@ -264,12 +264,23 @@ function renderText(q) {
 
 function renderShortAnswer(q) {
   const wrap = document.createElement("div");
+  const inputWrapper = document.createElement("div");
+  inputWrapper.style.display = "flex";
+  inputWrapper.style.gap = "0.75rem";
+  inputWrapper.style.alignItems = "flex-start";
+  
   const inp = document.createElement("input");
   inp.type = "text";
   inp.name = `short-${q.id}`;
   inp.placeholder = "Rövid válasz...";
   inp.style.width = "100%";
-  wrap.appendChild(inp);
+  inputWrapper.appendChild(inp);
+
+  const mark = document.createElement("span");
+  mark.className = "checkmark";
+  inputWrapper.appendChild(mark);
+
+  wrap.appendChild(inputWrapper);
 
   const hint = document.createElement("p");
   hint.className = "muted";
