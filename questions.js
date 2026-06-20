@@ -1399,3 +1399,376 @@ const QUESTION_BANK = [
     monkeyExplanation: ""}
 // End appended block
 ];
+
+const VIZSGA_QUESTION_BANK = [
+    {
+      id: "vizsga-01",
+      topic: "USB",
+      type: "truefalse",
+      title: "USB 2.0 kommunikáció kezdeményezése",
+      prompt: "Mely szereplők kezdeményezhetnek kommunikációt az USB 2.0-ban?",
+      statements: [
+        { text: "Root hub", answer: true },
+        { text: "A többi (nem root) hub", answer: false },
+        { text: "A root hub-ra közvetlenül csatlakozó perifériák", answer: false },
+        { text: "A többi (nem root) hub-ra közvetlenül csatlakozó perifériák", answer: false }
+      ],
+      explanation: "USB-ben a host/root hub oldala kezdeményezi a kommunikációt."
+    },
+    {
+      id: "vizsga-02",
+      topic: "Utasításkészletek",
+      type: "truefalse",
+      title: "RISC jellemzők",
+      prompt: "Az alábbiak közül melyek a RISC utasításkészletek jellemzői?",
+      statements: [
+        { text: "Nagy számú regiszter", answer: true },
+        { text: "Regiszter-memória műveletek", answer: false },
+        { text: "Kevés címzési mód", answer: true },
+        { text: "Változó hosszúságú utasításkódolás", answer: false }
+      ],
+      explanation: "A RISC egyszerűbb utasításokat, kevés címzési módot és sok regisztert használ."
+    },
+    {
+      id: "vizsga-03",
+      topic: "Megszakításkezelés",
+      type: "truefalse",
+      title: "Daisy chain interrupt kezelés",
+      prompt: "Mely állítások igazak a daisy chain alapú interrupt kezelésre?",
+      statements: [
+        { text: "Körbenforgó interrupt kiszolgálás megvalósítható", answer: false },
+        { text: "Az eszközök prioritása nem változtatható", answer: true },
+        { text: "Nem működik, ha egyidejűleg több eszköz is jelez interruptot", answer: false },
+        { text: "Elvben tetszőlegesen bővíthető", answer: true }
+      ],
+      explanation: "A daisy chain-ben a prioritást a láncbeli sorrend adja."
+    },
+    {
+      id: "vizsga-04",
+      topic: "Processzor / Pipeline",
+      type: "truefalse",
+      title: "EX fázisban előforduló kivételek",
+      prompt: "Mely kivételek fordulhatnak elő az EX fázisban?",
+      statements: [
+        { text: "Aritmetikai hiba", answer: true },
+        { text: "Laphiba", answer: false },
+        { text: "Érvénytelen utasítás", answer: false },
+        { text: "Védelmi hiba", answer: false }
+      ],
+      explanation: "Az EX fázisban a végrehajtás során aritmetikai hiba jelenhet meg."
+    },
+    {
+      id: "vizsga-05",
+      topic: "Periféria illesztés",
+      type: "truefalse",
+      title: "PCI és PCI Express kompatibilitás",
+      prompt: "Mi a PCI és a PCI Express viszonya kompatibilitás szempontjából?",
+      statements: [
+        { text: "Szoftver szinten kompatibilisek", answer: true },
+        { text: "Hardver szinten kompatibilisek", answer: false },
+        { text: "Ugyanazt az alaplapi csatlakozót használják", answer: false },
+        { text: "Ugyanazt az arbitrációs algoritmust használják", answer: false }
+      ],
+      explanation: "A PCIe nem PCI busz, de szoftveres szinten kompatibilitás megőrizhető."
+    },
+    {
+      id: "vizsga-06",
+      topic: "Memória",
+      type: "truefalse",
+      title: "DRAM tulajdonságok",
+      prompt: "Mely állítások igazak a DRAM memóriára?",
+      statements: [
+        { text: "Egy bit tárolásához 1 kondenzátor és 1 tranzisztor szükséges", answer: true },
+        { text: "Tartalmát rendszeresen frissíteni kell", answer: true },
+        { text: "Az SRAM-hoz képest gyorsabb az írás és olvasás művelete", answer: false },
+        { text: "Az SRAM-hoz képest sűrűbben helyezhetők el a cellák a tárolómátrixban", answer: true }
+      ],
+      explanation: "A DRAM 1 tranzisztor + 1 kondenzátor cellát használ, frissítést igényel, és a cellák sűrűbben helyezhetők el, mint SRAM esetén."
+    },
+    {
+      id: "vizsga-07",
+      topic: "Virtuális memória / TLB",
+      type: "matrix",
+      title: "Szoftver által menedzselt TLB feladatok",
+      prompt: "Jelezze a hardver és az operációs rendszer feladatait szoftver által menedzselt TLB esetén!",
+      columns: ["Az operációs rendszer", "Hardver (MMU) feladata"],
+      rows: [
+        { label: "Az érintett lap betöltése a háttértárból, ha lapcsere szükséges", answers: [true, false] },
+        { label: "A TLB hiba feloldása a laptábla bejárásával", answers: [true, false] },
+        { label: "Áldozatválasztás a fizikai memóriában tárolt lapok közül, ha lapcsere szükséges", answers: [true, false] },
+        { label: "A virtuális címből a fizikai cím előállítása", answers: [false, true] }
+      ],
+      explanation: "Szoftveresen menedzselt TLB-nél az operációs rendszer kezeli a TLB hibát, a lapcserét és az áldozatválasztást; a címfordítást a hardver végzi."
+    },
+    {
+      id: "vizsga-08",
+      topic: "Processzor / Pipeline",
+      type: "matrix",
+      title: "Pipeline frontend és backend",
+      prompt: "Egy utasításpipeline-ban mely fázisok történnek a frontendben és melyek a backendben?",
+      columns: ["Frontend", "Backend"],
+      rows: [
+        { label: "Utasításlehívás", answers: [true, false] },
+        { label: "Utasítások elhelyezése az utasítástárolóban", answers: [true, false] },
+        { label: "Utasítások ütemezése végrehajtásra", answers: [false, true] },
+        { label: "Utasítások tényleges végrehajtása", answers: [false, true] }
+      ],
+      explanation: "A frontend a fetch/decode jellegű részeket, a backend a végrehajtást és ütemezést kezeli."
+    },
+    {
+      id: "vizsga-09",
+      topic: "SSD / NAND",
+      type: "matrix",
+      title: "MLC és SLC NAND tulajdonságok",
+      prompt: "Jelölje, mely tulajdonságok igazak az MLC NAND-re, és melyek az SLC NAND-ra!",
+      columns: ["MLC", "SLC"],
+      rows: [
+        { label: "Az olvasás adategysége a lap, a törlés a blokk", answers: [true, true] },
+        { label: "Egy tranzisztor kettőnél több töltöttségi szintjét különbözteti meg", answers: [true, false] },
+        { label: "Azonos tranzisztorszám mellett több adatot tárol", answers: [true, false] },
+        { label: "A kettő közül jellemzően ez visel el több törlési-programozási műveletet", answers: [false, true] }
+      ],
+      explanation: "Az MLC több bitszintet használ cellánként, az SLC egyszerűbb és tartósabb."
+    },
+    {
+      id: "vizsga-10",
+      topic: "RAID",
+      type: "matrix",
+      title: "RAID-0 és RAID-6 tulajdonságok",
+      prompt: "Melyik RAID technológiára igazak az egyes állítások?",
+      columns: ["RAID-0", "RAID-6"],
+      rows: [
+        { label: "Nem használ redundanciát", answers: [true, false] },
+        { label: "Egy hiba esetén a teljes adatmennyiség visszaállítható marad", answers: [false, true] },
+        { label: "Az írási és olvasási műveletek sebessége kb. azonos", answers: [true, false] },
+        { label: "A diszkek terhelése az írás/olvasási műveletek szempontjából kb. kiegyenlített", answers: [true, true] }
+      ],
+      explanation: "RAID-0 nem redundáns, RAID-6 két lemezhibát is túlélhet."
+    },
+    {
+      id: "vizsga-11",
+      topic: "Virtuális memória / TLB",
+      type: "number",
+      title: "Laptábla bejárási fordulók",
+      prompt: "Hányszor kell a memóriához fordulni a címfordítás (és csak annak) érdekében 5 szintű laptábla használata esetén?",
+      fields: [
+        { label: "TLB hiba esetén", answer: 5, suffix: "forduló" },
+        { label: "TLB találat esetén", answer: 0, suffix: "forduló" }
+      ],
+      explanation: "TLB hit esetén nincs laptábla-bejárás, miss esetén az öt szintet végig kell járni."
+    },
+    {
+      id: "vizsga-12",
+      topic: "Processzor / EPIC",
+      type: "shortanswer",
+      title: "Utasításcsoportok szerepe az EPIC architektúrában",
+      prompt: "Mi az utasításcsoportok szerepe az EPIC architektúrában?",
+      answer: "Az utasításcsoportok tárolják az egyszerre végrehajtható műveleteket.",
+      explanation: "Az EPIC-ben az utasításcsoportok az egyszerre végrehajtható műveletek összefogását szolgálják."
+    },
+    {
+      id: "vizsga-13",
+      topic: "Processzor / Multiprocesszor",
+      type: "number",
+      title: "Amdahl-törvény gyorsulás",
+      prompt: "Amdahl törvénye szerint mekkora a gyorsulás végtelen processzorszám esetén, ha a program 2/3-a párhuzamosítható tökéletesen, a többi szekvenciális?",
+      fields: [
+        { label: "Gyorsulás", answer: 3, suffix: "x" }
+      ],
+      explanation: "Ha a program 2/3-a párhuzamosítható, akkor a szekvenciális rész 1/3, így a maximális gyorsulás 3."
+    },
+    {
+      id: "vizsga-14",
+      topic: "Processzor / Pipeline",
+      type: "shortanswer",
+      title: "BTB feladata",
+      prompt: "Mi a feladata a processzorokban található ugrási cím buffer-nek (BTB-nek)?",
+      answer: "A BTB az ugróutasítások célcímének előrejelzését és gyorsítótárazását végzi.",
+      explanation: "A BTB csökkenti az ugrások miatti várakozást."
+    },
+    {
+      id: "vizsga-15",
+      topic: "SSD / NAND",
+      type: "number",
+      title: "Lebegő gate-es tranzisztorok bitkapacitása",
+      prompt: "Ha van 8 lebegő gate-es tranzisztorunk, hány bitet tudunk tárolni velük egy SLC-t, MLC-t, illetve TLC-t használó NAND flash alapú SSD meghajtón?",
+      fields: [
+        { label: "SLC esetben", answer: 8, suffix: "bit" },
+        { label: "MLC esetben", answer: 16, suffix: "bit" },
+        { label: "TLC esetben", answer: 24, suffix: "bit" }
+      ],
+      explanation: "SLC 1 bit/cella, MLC 2 bit/cella, TLC 3 bit/cella. 8 cellával rendre 8, 16 és 24 bit tárolható."
+    },
+    {
+      id: "vizsga-16",
+      topic: "Processzor / Control flow",
+      type: "text",
+      title: "Feltételes ugrások sorrendje",
+      prompt: "Egy programban egy algoritmus a folyamatábra szerint működik. Adja meg, hogy az algoritmus kezdetétől a végéig, sorrendhelyesen, mely feltételes ugró utasítások kerülnek sorra, és mi az ugrások kimenetele!",
+      keywords: {
+        requiredGroups: [
+          ["i+j<4", "i<2"],
+          ["ugrik_yes", "nem_ugrik_no"]
+        ]
+      },
+      sample: "i+j<4, i+j<4, i+j<4, i+j<4, i<2, i+j<4, i+j<4, i+j<4, i<2\nugrik_yes, ugrik_yes, ugrik_yes, nem_ugrik_no, ugrik_yes, ugrik_yes, ugrik_yes, nem_ugrik_no, nem_ugrik_no",
+      explanation: "A táblázatban szereplő sorrend a helyes megoldás."
+    },
+    {
+      id: "vizsga-17",
+      topic: "Processzor / Branch prediction",
+      type: "text",
+      title: "Lokális dinamikus elágazásbecslés",
+      prompt: "Processzorunk egyszerű, 2 bites állapotgépre alapozott lokális dinamikus elágazásbecslést használ, és 8 ugró utasítást tud követni. Hogyan alakulnak a PHT állapotváltozói, a becslés és a sikeresség a 817(T), 845(T), 845(T), 817(T), 817(N), 845(N) sorozatnál?",
+      keywords: {
+        requiredGroups: [
+          ["PHT[0]", "PHT[4]", "817", "845"],
+          ["becslés", "sikeresség"],
+          ["J", "H"]
+        ]
+      },
+      sample: "PHT[0] 01\nPHT[1] 01\nPHT[2] 11\nPHT[3] 00\nPHT[4] 10\nPHT[5] 00\nPHT[6] 11\nPHT[7] 11\nBecslés: 0 1 1 1 1 1\nSikeresség: H J J J H H",
+      explanation: "A kérdés a PHT táblázat kitöltésére vonatkozik."
+    },
+    {
+      id: "vizsga-18",
+      topic: "Processzor / Pipeline",
+      type: "text",
+      title: "6 fokozatú pipeline ütemezés",
+      prompt: "Legyen adott az alábbi utasítás sorozat: i1: R1 ← MEM[R0+0], i2: R2 ← MEM[R0+4], i3: R3 ← R1 + R2, i4: R4 ← R3 * R2, i5: R0 ← R0 + 8. Adja meg az utasítássorozat ütemezését és a forwarding forrásokat!",
+      keywords: {
+        requiredGroups: [
+          ["i3", "A*", "ME1/WB"],
+          ["i4", "F*", "EX/ME0"],
+          ["i5", "IF", "WB"]
+        ]
+      },
+      sample: "i1: IF ID EX ME0 ME1 WB\ni2: IF ID EX ME0 ME1 WB\ni3: IF ID A* A* EX ME0 ME1 WB\ni4: IF F* F* ID EX ME0 ME1 WB\ni5: IF ID EX ME0 ME1 WB\nForwarding: ME1/WB,EX/ME0",
+      explanation: "A megadott ütemezés az egymásrahatások és forwarding útvonalak szerinti helyes megoldás."
+    },
+    {
+      id: "vizsga-19-raw",
+      topic: "Processzor / Függőségek",
+      type: "matrix",
+      title: "RAW függőségek",
+      prompt: "Az utasítások között áll fenn RAW függőség?",
+      columns: ["i1", "i2", "i3", "i4"],
+      rows: [
+        { label: "i2", answers: [false, false, false, false] },
+        { label: "i3", answers: [true, true, false, false] },
+        { label: "i4", answers: [false, true, true, false] },
+        { label: "i5", answers: [false, false, false, false] }
+      ],
+      explanation: "A RAW függőségek az i3 és i4 utasításoknál jelennek meg a táblázat szerint."
+    },
+    {
+      id: "vizsga-19-war",
+      topic: "Processzor / Függőségek",
+      type: "matrix",
+      title: "WAR függőségek",
+      prompt: "Az utasítások között áll fenn WAR függőség?",
+      columns: ["i1", "i2", "i3", "i4"],
+      rows: [
+        { label: "i2", answers: [false, false, false, false] },
+        { label: "i3", answers: [true, false, false, false] },
+        { label: "i4", answers: [false, false, false, false] },
+        { label: "i5", answers: [false, false, false, false] }
+      ],
+      explanation: "A WAR függőség az i1 és i3 utasítás között jelenik meg."
+    },
+    {
+      id: "vizsga-19-waw",
+      topic: "Processzor / Függőségek",
+      type: "matrix",
+      title: "WAW függőségek",
+      prompt: "Az utasítások között áll fenn WAW függőség?",
+      columns: ["i1", "i2", "i3", "i4"],
+      rows: [
+        { label: "i2", answers: [false, false, false, false] },
+        { label: "i3", answers: [true, false, false, false] },
+        { label: "i4", answers: [false, false, false, false] },
+        { label: "i5", answers: [false, false, false, false] }
+      ],
+      explanation: "A WAW függőség az i1 és i3 utasítás között jelenik meg."
+    },
+    {
+      id: "vizsga-20",
+      topic: "Processzor / Optimalizálás",
+      type: "shortanswer",
+      title: "Gyorsabb utasítássorrend",
+      prompt: "Rendezze át az utasítássorozatot úgy, hogy gyorsabban fusson le!",
+      answer: "i1 - i2 - i5 - i3 - i4",
+      explanation: "Az átrendezett sorrend az i1 - i2 - i5 - i3 - i4.",
+      sample: "i1 - i2 - i5 - i3 - i4"
+    },
+    {
+      id: "vizsga-21",
+      topic: "Cache",
+      type: "number",
+      title: "Cache tag és összehasonlítások",
+      prompt: "Egy teljesen asszociatív, virtuális címekkel indexelő cache esetén határozza meg a tag-bitek és a párhuzamos összehasonlítások számát!",
+      fields: [
+        { label: "Cache tag-bitek", answer: 26, suffix: "bit" },
+        { label: "Egyidejű összehasonlítások száma", answer: 4, suffix: "db" },
+        { label: "Összehasonlítás szélessége", answer: 26, suffix: "bit" }
+      ],
+      explanation: "A 32 bites virtuális cím és a 64 bájtos blokk miatt a tag 26 bites, és 4 cache lineszintet kell egyszerre vizsgálni."
+    },
+    {
+      id: "vizsga-21b",
+      topic: "Cache",
+      type: "text",
+      title: "Cache állapotváltozás LRU mellett",
+      prompt: "Hogyan változik a cache memória tartalma a megadott hivatkozásoknál LRU cserealgoritmus mellett?",
+      keywords: {
+        requiredGroups: [
+          ["315", "22", "551"],
+          ["9", "1"],
+          ["LRU"]
+        ]
+      },
+      sample: "315 beszúrása után: [22|2] [315|1] [42|3] [9|4]\n9 beszúrása után: [22|2] [551|4] [42|3] [9|1]\n22 beszúrása után: [22|1] [551|4] [42|2] [9|3]",
+      explanation: "A megadott három eset az LRU szerinti helyes cache-állapotot mutatja."
+    },
+    {
+      id: "vizsga-22",
+      topic: "Regiszterátnevezés",
+      type: "text",
+      title: "Regiszterátnevezés és függőségek",
+      prompt: "Szüntesse meg a WAW és WAR egymásrahatásokat regiszterátnevezéssel!",
+      keywords: {
+        requiredGroups: [
+          ["MEM[U4+0]", "U10+5"],
+          ["U11", "U5*U10"],
+          ["U12", "U5*U7"]
+        ]
+      },
+      sample: "i1': MEM[U4+0] ← U10+5\ni2': U11 ← U5*U10\ni3': MEM[U11+0] ← U1+5\ni4': U12 ← U5*U7",
+      explanation: "Az átnevezett sorozat az adott fizikai regiszterkiosztást követi."
+    },
+    {
+      id: "vizsga-23",
+      topic: "Regiszterátnevezés",
+      type: "number",
+      title: "Ideális OoO futási idő",
+      prompt: "Mennyi ideig tart a fenti utasítássorozat végrehajtása regiszterátnevezés nélkül és azzal?",
+      fields: [
+        { label: "Regiszterátnevezés nélkül", answer: 4, suffix: "órajel" },
+        { label: "Regiszterátnevezéssel", answer: 2, suffix: "órajel" }
+      ],
+      explanation: "A névütközések megszüntetése után a párhuzamosítás jobb, ezért két órajel elegendő."
+    },
+    {
+      id: "vizsga-24",
+      topic: "Háttértár",
+      type: "number",
+      title: "Merevlemez forgási sebesség és kiszolgálási idő",
+      prompt: "Számítsa ki a megadott diszk paramétereit!",
+      fields: [
+        { label: "Forgási sebesség", answer: 10000, suffix: "RPM" },
+        { label: "5000 bájtos kérés átlagos kiszolgálási ideje", answer: 10, suffix: "ms" },
+        { label: "Diszk átviteli sebessége", answer: 500000, suffix: "bájt/s" }
+      ],
+      explanation: "A mért késleltetésből 10000 RPM adódik, a kiszolgálási idő 10 ms, az átviteli sebesség 500000 bájt/s."
+  }
+];

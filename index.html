@@ -30,6 +30,14 @@
   <main>
     <section class="panel controls">
       <label>
+        Bank:
+        <select id="bankFilter">
+          <option value="zárthelyi">Zárthelyi</option>
+          <option value="vizsga">Vizsga</option>
+        </select>
+      </label>
+
+      <label>
         Témakör:
         <select id="topicFilter">
           <option value="all">Összes</option>
@@ -80,7 +88,7 @@
   </template>
 
   <footer>
-    <p>Offline működik. A kérdésbankot a <code>questions.js</code> fájlban tudod bővíteni.</p>
+    <p>Offline működik. A kérdésbankokat a <code>questions.js</code> fájlban tudod bővíteni.</p>
   </footer>
 
   <script src="questions.js"></script>

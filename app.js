@@ -1,15 +1,22 @@
 const quizEl = document.querySelector("#quiz");
 const template = document.querySelector("#questionTemplate");
+const bankFilter = document.querySelector("#bankFilter");
 const topicFilter = document.querySelector("#topicFilter");
 const modeEl = document.querySelector("#mode");
 const themeToggleBtn = document.querySelector("#themeToggleBtn");
 
 const THEME_STORAGE_KEY = "archPracticeTheme";
+const ACTIVE_BANK_STORAGE_KEY = "archPracticeBank";
+const QUESTION_BANKS = {
+  "zárthelyi": QUESTION_BANK,
+  vizsga: VIZSGA_QUESTION_BANK
+};
 
 let currentQuestions = [];
 let scoredQuestionIds = new Set();
 let examSetScored = false;
 let state = JSON.parse(localStorage.getItem("archPracticeState") || '{"score":0,"answered":0,"streak":0}');
+let currentBankName = localStorage.getItem(ACTIVE_BANK_STORAGE_KEY) || "zárthelyi";
 
 function getPreferredTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -45,8 +52,26 @@ function updateStats() {
   document.querySelector("#streak").textContent = state.streak;
 }
 
+function getActiveQuestionBank() {
+  return QUESTION_BANKS[currentBankName] || QUESTION_BANKS["zárthelyi"];
+}
+
+function initBankOptions() {
+  if (!bankFilter) return;
+
+  bankFilter.innerHTML = "";
+  Object.keys(QUESTION_BANKS).forEach(bankName => {
+    const opt = document.createElement("option");
+    opt.value = bankName;
+    opt.textContent = bankName === "zárthelyi" ? "Zárthelyi" : "Vizsga";
+    bankFilter.appendChild(opt);
+  });
+}
+
 function initTopics() {
-  const topics = [...new Set(QUESTION_BANK.map(q => q.topic))].sort();
+  const questions = getActiveQuestionBank();
+  const topics = [...new Set(questions.map(q => q.topic))].sort();
+  topicFilter.innerHTML = '<option value="all">Összes</option>';
   for (const topic of topics) {
     const opt = document.createElement("option");
     opt.value = topic;
@@ -61,11 +86,26 @@ function shuffle(arr) {
 
 function makeSet() {
   const topic = topicFilter.value;
-  const pool = topic === "all" ? QUESTION_BANK : QUESTION_BANK.filter(q => q.topic === topic);
+  const bankQuestions = getActiveQuestionBank();
+  const pool = topic === "all" ? bankQuestions : bankQuestions.filter(q => q.topic === topic);
   currentQuestions = shuffle(pool).slice(0, Math.min(8, pool.length));
   scoredQuestionIds = new Set();
   examSetScored = false;
   render();
+}
+
+function switchQuestionBank(bankName) {
+  const nextBank = QUESTION_BANKS[bankName] ? bankName : "zárthelyi";
+  currentBankName = nextBank;
+  localStorage.setItem(ACTIVE_BANK_STORAGE_KEY, nextBank);
+
+  if (bankFilter) {
+    bankFilter.value = nextBank;
+  }
+
+  initTopics();
+  topicFilter.value = "all";
+  makeSet();
 }
 
 function render() {
@@ -735,9 +775,14 @@ document.querySelector("#resetProgressBtn").addEventListener("click", () => {
 
 themeToggleBtn.addEventListener("click", toggleTheme);
 
+bankFilter.addEventListener("change", () => switchQuestionBank(bankFilter.value));
+
 topicFilter.addEventListener("change", makeSet);
 
 setTheme(document.documentElement.dataset.theme || getPreferredTheme());
+initBankOptions();
+bankFilter.value = QUESTION_BANKS[currentBankName] ? currentBankName : "zárthelyi";
+currentBankName = bankFilter.value;
 initTopics();
 updateStats();
 makeSet();
